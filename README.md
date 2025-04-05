@@ -4,4 +4,4 @@ Currently, the repo is divided into branches such that:
 2. `underwater-rov` branch will include its model class, its cost function and other params.
 3. `unicycle` branch ^ same but for unicycle.
 
-The 'Projects' section will include all the tasks and task allocation. And the 'Wiki' section can include all the useful links and other info, if needed. (TODO) 
+The [Projects](https://github.com/users/Zeraphu/projects/2/views/1) section will include all the tasks and task allocation. And the [Wiki](https://github.com/Zeraphu/ecn_ga-mppi/wiki) section can include all the useful links and other info, if needed. (TODO) 
