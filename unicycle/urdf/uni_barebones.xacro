@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<robot name="unicycle" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:macro name="cylinder_inertia" params="mass r h">
+  <inertial>  
+    <mass value="${mass}"/>    
+    <inertia  ixx="${mass*(3*r*r+h*h)/12}" ixy = "0" ixz = "0"
+              iyy="${mass*(3*r*r+h*h)/12}" iyz = "0"
+              izz="${mass*r*r/2}" /> 
+  </inertial>              
+</xacro:macro>
+
+<!-- 
+Wheel radius = 0.031m
+Wheel length = 0.001m
+Disc radius = 0.077m
+Disc length = 0.001m
+Frame radius = 0.002m
+Frame length = 0.177m
+-->
+
+<xacro:include filename="$(find unicycle)/urdf/uni_barebones.trans" />
+
+<!-- <link name = "base_footprint"/> -->
+
+<link name = "wheel">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.031" length="0.005"/>
+        </geometry>
+    </visual>
+    <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.031" length="0.005"/>
+        </geometry>
+    </collision>
+    <xacro:cylinder_inertia mass="0.1" r="0.031" h="0.005"/>
+</link>
+
+<link name = "disc">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.077" length="0.001"/>
+        </geometry>
+    </visual>
+    <!-- <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.077" length="0.001"/>
+        </geometry>
+    </collision> -->
+    <xacro:cylinder_inertia mass="0.384" r="0.077" h="0.001"/>
+</link>
+
+<link name = "frame">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.002" length="0.177"/>
+        </geometry>
+        <material name="black">
+            <color rgba="0 0 0 1"/>
+        </material>
+    </visual>
+    <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.002" length="0.177"/>
+        </geometry>
+    </collision>
+    <xacro:cylinder_inertia mass="0.848" r="0.002" h="0.177"/>
+</link>
+
+<!-- Joint between the wheel and the frame -->
+<joint name="wheel_joint" type="revolute">
+    <parent link="frame"/>
+    <child link="wheel"/>
+    <origin xyz="0 0 -0.0885" rpy="0 1.5708 0"/>
+    <limit effort="0.5" velocity="1.0" lower="-3.14" upper="3.14"/>
+</joint>
+
+<!-- Joint between the disc and the frame -->
+<joint name="disc_joint" type="revolute">
+    <parent link="frame"/>
+    <child link="disc"/>
+    <origin xyz="0 0 0.0885" rpy="1.5708 0 0"/>
+    <limit effort="0.5" velocity="1.0" lower="-3.14" upper="3.14"/>
+</joint>
+</robot>
