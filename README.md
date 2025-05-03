@@ -6,14 +6,14 @@ ECN M1 Group Project: Integrating MPPI with Genetic Algorithms
 The `src` folder includes two Python files:
 
 1. **`motionModel.py`**:  
-    This file defines the unicycle motion model for the TurtleBot and provides a path prediction function, `gen_path`, within the `turtleModel` class.
+    This file defines the unicycle motion model for the TurtleBot and provides a path prediction function, `predict`, within the `turtleModel` class.
 
 2. **`pop_generator.py`**:  
     This script performs the following tasks:  
-    - Generates a reference path (a straight line of length `horizon`).  
+    - Generates a reference path (a randomly generated line of length `horizon`).  
     - Creates `num_paths` random paths using the `turtleModel` class.  
     - Identifies the closest path to the reference using the Euclidean norm.  
-    - Visualizes all random paths and highlights the closest path using `matplotlib`.
+    - Visualizes all random paths and highlights the closest path and the reference path, using `matplotlib`.
 
 ### Prerequisites
 To use the path generator, ensure you have Python 3.x installed along with the following libraries:  
@@ -34,7 +34,7 @@ python3 path/to/pop_generator.py
 Or just use the VSCode play button :)
 
 ### Next steps
-1. Refactor path generation to utilize NumPy operations, instead of explicit loops.
+1. ~~Refactor path generation to utilize NumPy operations, instead of explicit loops.~~
 2. Define a new python file called `ga_costs.py` containing a cluster of functions for:
     - **closest path to the reference path** (Euclidean norm of difference between random path and reference)
     - **advance** (Euclidean distance between initial and final state, i.e., only x, y values)
