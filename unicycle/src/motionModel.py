@@ -88,7 +88,7 @@ class turtleModel():
             
         for i in range(max_steps):
             self.X = np.vstack((self.X, A @ self.X[-1] + B @ self.U[i]))
-        return self.X
+        return self.U, self.X
         
 # Example usage
 # The `turtleModel` class simulates the motion of a unicycle-like robot.
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     import time
     start = time.time()
     turtle.set_state(0, 0, 0)
-    ref_state = turtle.predict(100)
+    _, ref_state = turtle.predict(100)
     end = time.time()
     print(f"\nTime taken to generate path: {end- start:.4f} seconds\n")
 
