@@ -55,8 +55,18 @@ def compute_control_effort_cost(control_seq):
     """
     return np.sum(np.square(control_seq[:, 0]) + np.square(control_seq[:, 1]))
 
+<<<<<<< HEAD
 
 def compute_total_cost(path, control_seq, alpha=1.0, beta=1.0, gamma=1.0):
+=======
+def compute_euc_cost(path, ref_path):
+    return np.linalg.norm(path - ref_path, axis=1).sum()
+
+def compute_ctr_cost(path, control_seq, 
+                       alpha=1.0, 
+                       beta=1.0, 
+                       gamma=1.0,):
+>>>>>>> 2717ca8 (WIP: gen_algo initial push.)
     """
     Combines multiple cost terms: curvature, control smoothness, and energy.
     

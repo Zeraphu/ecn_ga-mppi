@@ -25,11 +25,10 @@ class turtleModel():
         self.v_std = v_std
         self.w_std = w_std
         self.max_w = max_w
-        # Initialize as empty arrays
         self.U = np.empty((0, 2))   
         self.X = np.empty((0, 3))
 
-    def set_state(self, x: float = 0.0, y: float = 0.0, theta: float = 0.0):
+    def reset_state(self, x: float = 0.0, y: float = 0.0, theta: float = 0.0):
         """
         Sets the state of the turtle model.
         :param x: x position, default=0.0.
@@ -39,7 +38,7 @@ class turtleModel():
         self.X = np.array([[x, y, theta]])  # State vector
         return self.X
     
-    def set_input(self, v: float = 0.0, w: float = 0.0):
+    def reset_input(self, v: float = 0.0, w: float = 0.0):
         """
         Sets the input for the turtle model.
         :param v: Linear velocity, default=0.0.
@@ -81,10 +80,9 @@ class turtleModel():
         Predicted path of max_steps length using the current U.
         :return: Predicted state vector.
         """
-        self.generate_input(max_steps)
         A, B = self.get_jacobian()
         if len(self.U) < max_steps:
-            raise ValueError(f"Insufficient inputs generated: expected {max_steps}, got {len(self.U)}")
+            raise ValueError(f"{[turtleModel.__name__]}:\tInsufficient inputs generated: expected {max_steps}, got {len(self.U)}")
             
         for i in range(max_steps):
             self.X = np.vstack((self.X, A @ self.X[-1] + B @ self.U[i]))
@@ -100,7 +98,12 @@ if __name__ == "__main__":
 
     import time
     start = time.time()
+<<<<<<< HEAD
     turtle.set_state(0, 0, 0)
+=======
+    turtle.reset_state(0, 0, 0)
+    turtle.generate_input(10)
+>>>>>>> 2717ca8 (WIP: gen_algo initial push.)
     _, ref_state = turtle.predict(100)
     end = time.time()
     print(f"\nTime taken to generate path: {end- start:.4f} seconds\n")

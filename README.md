@@ -29,6 +29,10 @@ The `src` folder includes two Python files:
 5. **`ga_costs.py`**:
     This script contains three variations of cost functions for control law cost with three open functions: `compute_path_curvature_cost`, `compute_control_variation_cost`, and `compute_control_effort_cost`. Lastly, `compute_total_cost` function which computes all costs with user-defined weights.
 
+6. **`ga_algo.py`**:
+    NOTE: WIP version of the GA in python3. It visualizes the closest_path, best control path and the total best path. Looks like this right now:
+    
+
 ### Prerequisites
 To use the path generator, ensure you have Python 3.x installed along with the following libraries:  
 - `numpy`  
