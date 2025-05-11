@@ -31,7 +31,7 @@ The `src` folder includes two Python files:
 
 6. **`ga_algo.py`**:
     NOTE: WIP version of the GA in python3. It visualizes the closest_path, best control path and the total best path. Looks like this right now:
-    
+    ![alt text](unicycle/imgs/gen_algo_output.png)
 
 ### Prerequisites
 To use the path generator, ensure you have Python 3.x installed along with the following libraries:  

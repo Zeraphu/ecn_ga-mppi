@@ -98,12 +98,8 @@ if __name__ == "__main__":
 
     import time
     start = time.time()
-<<<<<<< HEAD
-    turtle.set_state(0, 0, 0)
-=======
     turtle.reset_state(0, 0, 0)
     turtle.generate_input(10)
->>>>>>> 2717ca8 (WIP: gen_algo initial push.)
     _, ref_state = turtle.predict(100)
     end = time.time()
     print(f"\nTime taken to generate path: {end- start:.4f} seconds\n")
