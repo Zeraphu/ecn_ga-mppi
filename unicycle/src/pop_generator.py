@@ -118,7 +118,7 @@ def visualize(paths = [], ref_path = [], closest = [], most_advanced = [],  ctr_
         
     if len(most_advanced) == 0:
         print("\nNo most advanced path to visualize.\n")
-    else: plt.plot(closest[:, 0], closest[:, 1], 
+    else: plt.plot(most_advanced[:, 0], most_advanced[:, 1], 
                    color='yellow', label='Most advanced Path', linewidth=5)
     
     if len(ctr_closest) == 0:
@@ -140,7 +140,6 @@ if __name__ == "__main__":
     _, ref_path = generate_reference_path(horizon=horizon)
     inputs, paths = generate_population(horizon=horizon, num_paths=num_paths)
     _, closest, _, most_advanced = select_best_paths(ref_path, paths)
-    print("most_advanced_path: ", closest)
     _, ctr_closest = best_ctr_path(inputs, paths)
 
     end = time.time()
