@@ -58,6 +58,18 @@ def compute_control_effort_cost(control_seq):
 def compute_euc_cost(path, ref_path):
     return np.linalg.norm(path - ref_path, axis=1).sum()
 
+def compute_advance(path) -> float:
+    """
+    Compute the Euclidean ‘advance’ of a path, defined as the
+    straight‐line distance between its first and last points.
+    
+    :param path: array of shape (N, 2), waypoints [x, y]
+    :return: Euclidean distance ||last - first||
+    """
+    start = path[0]    # [x_0, y_0]
+    end   = path[-1]   # [x_{N-1}, y_{N-1}]
+    return np.linalg.norm(end - start)
+
 def compute_ctr_cost(path, control_seq, 
                        alpha=1.0, 
                        beta=1.0, 
