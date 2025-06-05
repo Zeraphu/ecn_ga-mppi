@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 from ga_costs import compute_ctr_cost, compute_euc_cost, compute_advance
+from ga import run_ga
 
 turtle = turtleModel()
 horizon, num_paths = 100, 100
@@ -90,7 +91,7 @@ def best_ctr_path(inputs, paths):
             best_path = path
     return min_cost, best_path
 
-def visualize(paths = [], ref_path = [], closest = [], most_advanced = [],  ctr_closest = []):
+def visualize(paths = [], ref_path = [], closest = [], most_advanced = [],  ctr_closest = [], ga_path = []):
     """
     Visualizes the generated paths using matplotlib.
     :param paths: List of paths.
@@ -125,6 +126,11 @@ def visualize(paths = [], ref_path = [], closest = [], most_advanced = [],  ctr_
         print("\nNo best control path to visualize.\n")
     else: plt.plot(ctr_closest[:, 0], ctr_closest[:, 1], 
                    color='blue', label='Best Control Path', linewidth=5)
+        
+    if len(ga_path) == 0:
+        print("\nNo GA path to visualize.\n")
+    else: plt.plot(ga_path[:, 0], ga_path[:, 1], 
+                   color='purple', label='GA path', linewidth=5)
 
     plt.legend()
     plt.title("Generated Paths")
@@ -143,10 +149,14 @@ if __name__ == "__main__":
     _, ctr_closest = best_ctr_path(inputs, paths)
 
     end = time.time()
+
+    print(paths[1][1])
+
+    ga_path, _ = run_ga(paths, ref_path)
     print(f"\nTime taken to generate and visualize paths: {end - start:.4f} seconds\n")
     
     visualize(paths=paths,
              ref_path=ref_path,
              closest=closest,
              most_advanced=most_advanced,
-             ctr_closest=ctr_closest)
+             ctr_closest=ctr_closest, ga_path=ga_path)
