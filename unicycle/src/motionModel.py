@@ -38,6 +38,16 @@ class turtleModel():
         self.X = np.array([[x, y, theta]])  # State vector
         return self.X
     
+    def reset_state_from_pop(self, state: np.ndarray):
+        """
+        Sets the state of the turtle model from a numpy array.
+        :param state: State vector as a numpy array of shape (3,).
+        """
+        if state.shape != (3,):
+            raise ValueError("State must be a numpy array of shape (3,).")
+        self.X = np.array([state])
+        return self.X
+    
     def reset_input(self, v: float = 0.0, w: float = 0.0):
         """
         Sets the input for the turtle model.
@@ -45,6 +55,14 @@ class turtleModel():
         :param w: Angular velocity, default=0.0.
         """
         self.U = np.array([[v, w]])
+        return self.U
+    
+    def reset_input_from_pop(self, input: np.ndarray):
+        """
+        Sets the input for the turtle model from a numpy array.
+        :param input: Input vector as a numpy array of shape (2,).
+        """
+        self.U = np.array(input)
         return self.U
 
     def generate_input(self, max_steps: int = 100):

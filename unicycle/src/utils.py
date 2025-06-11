@@ -1,40 +1,63 @@
 #!/usr/bin/env python3
 
-from motionModel import turtleModel
+import motionModel
 import numpy as np
 import matplotlib.pyplot as plt
 import time
 from ga_costs import compute_ctr_cost, compute_euc_cost
-from ga import run_ga
+import ga
 
-turtle = turtleModel()
-horizon, num_paths = 100, 100
-
-def generate_reference_path(horizon:int = 100, 
-                            x:float = 0.0, y:float = 0.0, theta:float = 0.0):
+def generate_path(horizon:int = 100, 
+                  x:float = 0.0, y:float = 0.0, theta:float = 0.0,
+                  model = motionModel.turtleModel()):
     """
     Generates a reference path using the turtle model.
     :return: Reference path.
     """
-    turtle.reset_state(x, y, theta)
-    turtle.generate_input(horizon)
-    return turtle.predict(horizon)
+    model.reset_state(x, y, theta)
+    return model.predict(horizon)
 
-def generate_population(horizon:int = 100, num_paths:int = 100, 
-                        x:float = 0.0, y:float = 0.0, theta:float = 0.0):
+def generate_population(horizon:int = 100, 
+                        num_paths:int = 100, 
+                        x:float = 0.0, y:float = 0.0, theta:float = 0.0,
+                        model = motionModel.turtleModel()):
     """
     Generates a population of paths using the turtle model.
     :param num_paths: Number of paths to generate.
-    :return: List of paths.
+    :return: Tuple of numpy arrays (inputs, paths).
     """
     inputs, paths = [], []
     for _ in range(num_paths):
-        turtle.reset_state(x, y, theta)
-        turtle.generate_input(horizon)
-        input, path = turtle.predict(horizon)
+        model.generate_input(horizon)
+        input, path = generate_path(horizon, x, y, theta, model)
         paths.append(path)
         inputs.append(input)
-    return inputs, paths
+    return np.array(inputs), np.array(paths)
+
+def generate_population_from_inputs(horizon,
+                                    num_paths,
+                                    x, y, theta,
+                                    inputs, 
+                                    model = motionModel.turtleModel()):
+    """
+    Generates a population of paths from given inputs using the turtle model.
+    :param horizon: Number of steps in the prediction horizon.
+    :param num_paths: Number of paths to generate.
+    :param x: Initial x position.
+    :param y: Initial y position.
+    :param theta: Initial orientation.
+    :param inputs: List of control inputs.
+    :param model: Motion model to use for path generation.
+    :return: Tuple of numpy arrays (inputs, paths).
+    """
+    if len(inputs) != num_paths:
+        raise ValueError("Number of inputs must match num_paths.")
+    paths = []
+    for input in inputs:
+        model.reset_input_from_pop(input)
+        input, path = generate_path(horizon, x, y, theta, model)
+        paths.append(path)
+    return np.array(inputs), np.array(paths)
 
 def closest_path(ref_path, paths):
     """
@@ -70,7 +93,22 @@ def best_ctr_path(inputs, paths):
             best_path = path
     return min_cost, best_path
 
-def visualize(paths = [], ref_path = [], closest = [], ctr_closest = [], ga_path = []):
+def most_advance_path(paths):
+    """
+    Finds the path with the most advance.
+    :param paths: List of paths.
+    :return: Path with the most advance.
+    """
+    max_advance = -1
+    best_path = None
+    for path in paths:
+        advance = np.linalg.norm(path[-1] - path[0])
+        if advance > max_advance:
+            max_advance = advance
+            best_path = path
+    return max_advance, best_path
+
+def visualize(paths = [], ref_path = [], closest = [], ctr_closest = [], adv_path = [], ga_path = []):
     """
     Visualizes the generated paths using matplotlib.
     :param paths: List of paths.
@@ -81,13 +119,11 @@ def visualize(paths = [], ref_path = [], closest = [], ctr_closest = [], ga_path
     """
     if len(paths) == 0:
         raise ValueError("\nNo paths to visualize.\n")
-        return
     for path in paths:
         plt.plot(path[:, 0], path[:, 1])
 
     if len(ref_path) == 0:
         raise ValueError("\nNo reference path to visualize.\n")
-        return
     else: plt.plot(ref_path[:, 0], ref_path[:, 1], 
                  color='black', label='Reference Path', linewidth=5)
     
@@ -100,9 +136,14 @@ def visualize(paths = [], ref_path = [], closest = [], ctr_closest = [], ga_path
         print("\nNo best control path to visualize.\n")
     else: plt.plot(ctr_closest[:, 0], ctr_closest[:, 1], 
                    color='blue', label='Best Control Path', linewidth=5)
+        
+    if len(adv_path) == 0:
+        print("\nNo most advance path to visualize.\n")
+    else: plt.plot(adv_path[:, 0], adv_path[:, 1], 
+                   color='green', label='Most Advance Path', linewidth=5)
     
     if len(ga_path) == 0:
-        print("\nNo best control path to visualize.\n")
+        print("\nNo GA path to visualize.\n")
     else: plt.plot(ga_path[:, 0], ga_path[:, 1], 
                    color='purple', label='Best GA Path', linewidth=5)
 
@@ -117,16 +158,21 @@ def visualize(paths = [], ref_path = [], closest = [], ctr_closest = [], ga_path
 if __name__ == "__main__":
     start = time.time()
 
-    _, ref_path = generate_reference_path(horizon=horizon)
-    inputs, paths = generate_population(horizon=horizon, num_paths=num_paths)
+    turtle = motionModel.turtleModel()
+    horizon, num_paths = 100, 100
+    turtle.generate_input(horizon)
+
+    _, ref_path = generate_path(horizon=horizon, model =turtle)
+    inputs, paths = generate_population(horizon=horizon, num_paths=num_paths, model=turtle)
     _, closest = closest_path(ref_path, paths)
     _, ctr_closest = best_ctr_path(inputs, paths)
+    _, most_adv_path = most_advance_path(paths)
 
     population = np.array(inputs)
     x0=paths[0][0]
     x_ref=ref_path[-1]
-    best_U, best_X, _ = run_ga(population, x0, x_ref)
-    print(best_U.shape, np.array(paths).shape)
+    best_U, best_X, _ = ga.run_ga(population, x0, x_ref)
+    print(best_U.shape, np.array(paths).shape) # type: ignore
 
     end = time.time()
     print(f"\nTime taken to generate and visualize paths: {end - start:.4f} seconds\n")
@@ -134,4 +180,5 @@ if __name__ == "__main__":
     visualize(paths=paths,
              ref_path=ref_path,
              closest=closest,
-             ctr_closest=ctr_closest, ga_path=best_X)
+             ctr_closest=ctr_closest,
+             adv_path=most_adv_path,)
