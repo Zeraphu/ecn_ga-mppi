@@ -5,7 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 from ga_costs import compute_ctr_cost, compute_euc_cost
-import ga
 
 def generate_path(horizon:int = 100, 
                   x:float = 0.0, y:float = 0.0, theta:float = 0.0,
@@ -125,7 +124,7 @@ def visualize(paths = [], ref_path = [], closest = [], ctr_closest = [], adv_pat
     if len(ref_path) == 0:
         raise ValueError("\nNo reference path to visualize.\n")
     else: plt.plot(ref_path[:, 0], ref_path[:, 1], 
-                 color='black', label='Reference Path', linewidth=5)
+                 color='black', marker = "*", label='Reference Path')
     
     if len(closest) == 0:
         print("\nNo closest path to visualize.\n")
@@ -145,7 +144,7 @@ def visualize(paths = [], ref_path = [], closest = [], ctr_closest = [], adv_pat
     if len(ga_path) == 0:
         print("\nNo GA path to visualize.\n")
     else: plt.plot(ga_path[:, 0], ga_path[:, 1], 
-                   color='purple', label='Best GA Path', linewidth=5)
+                   color='purple', marker = "*", label='Best GA Path')
 
     plt.legend()
     plt.title("Generated Paths")
@@ -167,15 +166,6 @@ if __name__ == "__main__":
     _, closest = closest_path(ref_path, paths)
     _, ctr_closest = best_ctr_path(inputs, paths)
     _, most_adv_path = most_advance_path(paths)
-
-    population = np.array(inputs)
-    x0=paths[0][0]
-    x_ref=ref_path[-1]
-    best_U, best_X, _ = ga.run_ga(population, x0, x_ref)
-    print(best_U.shape, np.array(paths).shape) # type: ignore
-
-    end = time.time()
-    print(f"\nTime taken to generate and visualize paths: {end - start:.4f} seconds\n")
     
     visualize(paths=paths,
              ref_path=ref_path,

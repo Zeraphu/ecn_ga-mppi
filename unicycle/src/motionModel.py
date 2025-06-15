@@ -7,7 +7,7 @@ class turtleModel():
                  dt: float = 0.1,
                  min_v: float = 0.1,
                  max_v: float = 0.5, 
-                 max_w: float = 1.9,
+                 max_w: float = 1.4572,
                  v_std: float = 0.2,
                  w_std: float = 0.4,):
         """
@@ -74,7 +74,8 @@ class turtleModel():
         self.U = np.empty((0, 2))  # Reset U to empty array
         v_values = np.random.normal((self.max_v + self.min_v) / 2, self.v_std, max_steps)
         v_values = np.clip(v_values, self.min_v, self.max_v)  # Clamp values to [min_v, max_v]
-        w_values = np.random.normal(0, self.w_std, max_steps)
+        w_values = np.random.normal(0, self.max_w, max_steps)
+        w_values = np.clip(w_values, -self.max_w, self.max_w)  # Clamp values to [-max_w, max_w]
         self.U = np.vstack((self.U, np.column_stack((v_values, w_values))))
         return self.U
     
@@ -112,16 +113,22 @@ class turtleModel():
 # and visualizing the predicted trajectory.
 
 if __name__ == "__main__":
-    turtle = turtleModel()
+    turtle = turtleModel(dt=0.1,
+                         min_v=0.1,
+                         max_v=0.5,
+                         max_w=1.4572,
+                         v_std=0.2,
+                         w_std=0.4)
 
     import time
     start = time.time()
     turtle.reset_state(0, 0, 0)
     turtle.generate_input(10)
-    _, ref_state = turtle.predict(100)
+    ref_input, ref_state = turtle.predict(10)
     end = time.time()
-    print(f"\nTime taken to generate path: {end- start:.4f} seconds\n")
+    print(f"\nTime taken to generate path: {end - start:.4f} seconds\n")
 
+    print("Reference Input:\n", ref_input)
     # Plot the ref_state
     import matplotlib.pyplot as plt
     plt.plot(ref_state[:, 0], ref_state[:, 1])

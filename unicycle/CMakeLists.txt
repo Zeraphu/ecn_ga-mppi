@@ -23,8 +23,8 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-install(DIRECTORY src
-  DESTINATION share/${PROJECT_NAME}
+install(PROGRAMS mppi-ga/mppi-node.py src/MPPI_GA.py src/utils.py src/motionModel.py src/ga_costs.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 
