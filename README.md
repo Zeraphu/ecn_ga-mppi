@@ -40,6 +40,22 @@ export ROS_DOMAIN_ID=31
 ```
 Make sure you've installed cyclonedds, otherwise this will throw an error!
 
+Then, in `turtlebot3_ws/src/turtlebot3_simulations/turtlebot3_gazebo/models/turtlebot3_waffle/model.sdf`, in the <ros> tag, add `<remapping>cmd_vel:=cmd_vel_mppi</remapping>`, such that it looks like:
+```xml
+    <plugin name="turtlebot3_diff_drive_echo" filename="libgazebo_ros_diff_drive.so">
+      <ros>
+        <remapping>cmd_vel:=cmd_vel_mppi</remapping>
+      </ros>
+      
+      <update_rate>30</update_rate>
+
+      <!-- wheels -->
+      <left_joint>wheel_left_joint</left_joint>
+      <right_joint>wheel_right_joint</right_joint>
+      .....
+```
+So that the turtlebot3_navigation doesn't control our robot anymore.
+
 To run the simulations, clone this repo, build it and source it, then in your workspace root, run:
 ```bash
 ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
@@ -55,4 +71,4 @@ ros2 run unicycle mppi-node.py
 
 ### Results
 Here's a demonstration of the MPPI-GA:
-![MPPI-GA test video](unicycle/resources/mppi-test-video.mp4)
+![MPPI-GA test video](https://drive.google.com/file/d/1QLVFEKqPLOLiY7PeP1puDP1UkbbS4yys/view?usp=sharing)
