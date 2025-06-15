@@ -71,4 +71,4 @@ ros2 run unicycle mppi-node.py
 
 ### Results
 Here's a demonstration of the MPPI-GA:
-![MPPI-GA test video](https://drive.google.com/file/d/1QLVFEKqPLOLiY7PeP1puDP1UkbbS4yys/view?usp=sharing)
+[MPPI-GA test video](https://drive.google.com/file/d/1QLVFEKqPLOLiY7PeP1puDP1UkbbS4yys/view?usp=sharing)
