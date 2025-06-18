@@ -1,0 +1,13 @@
+**/src/__pycache__/
+**/*.py[cod]
+**/*.pyo
+**/*.pyd
+**/*.so
+**/*.egg-info/
+**/*.egg
+**/*.whl
+**/dist/
+**/build/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.coverage        
